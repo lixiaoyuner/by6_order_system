@@ -1,0 +1,61 @@
+{%extends 'base.html'%}
+{%block main%}
+<div class="col-xs-offset-1 col-lg-10">
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">选择用户</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+            <select class="form-control" id="user-select">
+                {% for user in users %}
+                <option value="{{user.id}}">{{user}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">开始时间</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+            <div class='input-group date'>
+                <input type='text' class="form-control" id='datetimepicker-start'/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">结束时间</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+            <div class='input-group date'>
+                <input type='text' class="form-control" id='datetimepicker-end'/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">备注</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+        <textarea id="deduct-remark" class="form-control" rows="3"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        <button id="deduct-submit" type="submit" class="btn btn-default">提交</button>
+        </div>
+    </div>
+</form>
+
+</div>
+
+<script src="/site_media/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="/site_media/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/site_media/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/site_media/js/deduct.js"></script>
+{%endblock%}

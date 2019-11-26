@@ -1,0 +1,375 @@
+{%extends 'base.html'%}
+{%block main%}
+
+   <script src="/site_media/dhtmlxscheduler/dhtmlxscheduler.js" type="text/javascript"></script>
+   <script src="/site_media/dhtmlxscheduler/ext/dhtmlxscheduler_timeline.js" type="text/javascript"></script>
+   <script src="/site_media/dhtmlxscheduler/ext/dhtmlxscheduler_readonly.js" type="text/javascript"></script>
+   <script src="/site_media/dhtmlxscheduler/ext/dhtmlxscheduler_recurring.js" type="text/javascript"></script>
+   <script src="/site_media/dhtmlxscheduler/ext/dhtmlxscheduler_minical.js" type="text/javascript" charset="utf-8"></script> 
+   <script src="/site_media/dhtmlxscheduler/ext/dhtmlxscheduler_limit.js" type="text/javascript" charset="utf-8"></script>   
+   <script src="/site_media/dhtmlxscheduler/locale/locale_cn.js" type="text/javascript"></script>
+   <link rel="stylesheet" href="/site_media/dhtmlxscheduler/dhtmlxscheduler.css" type="text/css">
+
+   <style type="text/css" media="screen">
+        html, body{
+            margin:0px;
+            padding:0px;
+            height:100%;
+            overflow:hidden;
+        }
+        .dhx_menu_icon.icon_break{
+            /*background-image: url('site_media/dhtmlxscheduler/imgs/calendar.gif');  */
+            background-image: url('site_media/static/admin/img/icon_alert.gif');
+            background-repeat: no-repeat;
+        }   
+
+    </style>
+<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:90%;'>
+    <div class="dhx_cal_navline">
+            <div class="dhx_cal_tab" name="timeline_tab" style="right:280px;"></div>
+        <div class="dhx_cal_prev_button">&nbsp;</div>
+        <div class="dhx_cal_next_button">&nbsp;</div>
+        <div class="dhx_cal_today_button"></div>
+        <div class="dhx_cal_date"></div>
+        <div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+        <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+        <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+    </div>
+    <div class="dhx_cal_header"></div>
+    <div class="dhx_cal_data"></div>       
+</div>
+
+
+<script type="text/javascript">
+
+var reload_url = '/load/?mode=week';
+function reload() {
+    if (reload_url == '') {
+        window.location.reload();
+    } else {
+        scheduler.load(reload_url, 'json');
+    }
+}
+
+scheduler.config.lightbox.sections=[
+        {name:"description", height:200, map_to:"text", type:"textarea" , focus:true},
+        {name:"time", height:72, type:"calendar_time", map_to:"auto", time_format:["%Y", "%m", "%d", "%H:%i"]},
+    ]
+    scheduler.locale.labels.timeline_tab ="时间轴";
+    scheduler.templates.calendar_time =scheduler.date.date_to_str("%Y-%m-%d");
+    scheduler.createTimelineView({
+         name:"timeline",
+         x_unit:"day",//measuring unit of the X-Axis.
+         x_date: "%m月%d日 %D",//"%d日%H时", //date format of the X-Axis
+         x_step:1,      //X-Axis step in 'x_unit's
+         x_size:7,      //X-Axis length specified as the total number of 'x_step's
+         x_start:0,     //X-Axis offset in 'x_unit's
+         x_length:1,    //number of 'x_step's that will be scrolled at a time
+         y_unit:         //sections of the view (titles of Y-Axis)
+            [{key:1, label:"Section A"}],
+         y_property:"device_id", //mapped data property
+         render:"bar"             //view mode
+    });
+scheduler.ignore_day = function(date){
+    {% if weekdayrange.monday == False %}
+        if (date.getDay() == 1) return true;
+    {%endif%}
+    {% if weekdayrange.tuesday == False %}
+        if (date.getDay() == 2) return true;
+    {%endif%}
+    {% if weekdayrange.wednesday == False %}
+        if (date.getDay() == 3) return true;
+    {%endif%}
+    {% if weekdayrange.thursday == False %}
+        if (date.getDay() == 4) return true;
+    {%endif%}
+    {% if weekdayrange.friday == False %}
+        if (date.getDay() == 5) return true;
+    {%endif%}
+    {% if weekdayrange.saturday == False %}
+        if (date.getDay() == 6) return true;
+    {%endif%}
+    {% if weekdayrange.sunday == False %}
+        if (date.getDay() == 0) return true;
+    {%endif%}
+};
+scheduler.ignore_week = function(date){
+    {% if weekdayrange.monday == False %}
+        if (date.getDay() == 1) return true;
+    {%endif%}
+    {% if weekdayrange.tuesday == False %}
+        if (date.getDay() == 2) return true;
+    {%endif%}
+    {% if weekdayrange.wednesday == False %}
+        if (date.getDay() == 3) return true;
+    {%endif%}
+    {% if weekdayrange.thursday == False %}
+        if (date.getDay() == 4) return true;
+    {%endif%}
+    {% if weekdayrange.friday == False %}
+        if (date.getDay() == 5) return true;
+    {%endif%}
+    {% if weekdayrange.saturday == False %}
+        if (date.getDay() == 6) return true;
+    {%endif%}
+    {% if weekdayrange.sunday == False %}
+        if (date.getDay() == 0) return true;
+    {%endif%}
+};
+scheduler.ignore_month = function(date){
+    {% if weekdayrange.monday == False %}
+        if (date.getDay() == 1) return true;
+    {%endif%}
+    {% if weekdayrange.tuesday == False %}
+        if (date.getDay() == 2) return true;
+    {%endif%}
+    {% if weekdayrange.wednesday == False %}
+        if (date.getDay() == 3) return true;
+    {%endif%}
+    {% if weekdayrange.thursday == False %}
+        if (date.getDay() == 4) return true;
+    {%endif%}
+    {% if weekdayrange.friday == False %}
+        if (date.getDay() == 5) return true;
+    {%endif%}
+    {% if weekdayrange.saturday == False %}
+        if (date.getDay() == 6) return true;
+    {%endif%}
+    {% if weekdayrange.sunday == False %}
+        if (date.getDay() == 0) return true;
+    {%endif%}
+};
+scheduler.ignore_timeline = function(date){
+    {% if weekdayrange.monday == False %}
+        if (date.getDay() == 1) return true;
+    {%endif%}
+    {% if weekdayrange.tuesday == False %}
+        if (date.getDay() == 2) return true;
+    {%endif%}
+    {% if weekdayrange.wednesday == False %}
+        if (date.getDay() == 3) return true;
+    {%endif%}
+    {% if weekdayrange.thursday == False %}
+        if (date.getDay() == 4) return true;
+    {%endif%}
+    {% if weekdayrange.friday == False %}
+        if (date.getDay() == 5) return true;
+    {%endif%}
+    {% if weekdayrange.saturday == False %}
+        if (date.getDay() == 6) return true;
+    {%endif%}
+    {% if weekdayrange.sunday == False %}
+        if (date.getDay() == 0) return true;
+    {%endif%}
+};
+scheduler.config.first_hour = {{hourrange.start_hour|default_if_none:0}};
+scheduler.config.last_hour = {{hourrange.end_hour|default_if_none:24}};
+    scheduler.init('scheduler_here');
+
+scheduler.load('/load/?mode=week', 'json');
+    function block_readonly(id){
+        if (!id) return true;
+        return !this.getEvent(id).readonly;
+    }
+    scheduler.attachEvent("onBeforeDrag",block_readonly)
+    scheduler.attachEvent("onClick",block_readonly)
+    scheduler.attachEvent("onDblClick",block_readonly)
+    var events = [
+        {%for ap in appointments%}
+            {id:{{ap.id}}, text:"{{ap.remarks}}",   start_date:"{{ap.start_time|date:'m/d/Y H:i'}}",end_date:"{{ap.end_time|date:'m/d/Y H:i'}}", device_id:1 {%if ap.readonly %}, readonly:true, color:"#CCCCCC"{%elif ap.status == 1%},readonly:true, color:"green"{%endif%} },
+        {%endfor%}
+
+        {%for d in oncedisable%}
+            {id:'once_{{d.pk}}', text:"不可预约（{{d.start_time|date:'Y-m-d H:i'}} ~ {{d.end_time|date:'Y-m-d H:i'}}）",   start_date:"{{d.start_time|date:'m/d/Y H:i'}}",end_date:"{{d.end_time|date:'m/d/Y H:i'}}", device_id:1, readonly:true, color:"#CCCCCC"},
+        {%endfor%}
+
+        {%for d in dailydisable%}
+            {%if d.start_hour > d.end_hour%}
+                {id:'daily_{{d.pk}}_0', text:"不可预约（每天：{{d.start_hour}}:00 ~ 00:00）",   start_date:"{{d.get_start_date}}", end_date:"1/1/9999 00:00", device_id:1, readonly:true, color:"#CCCCCC",rec_type:"day_1___", event_length:"{{d.get_start_length}}",},
+                {id:'daily_{{d.pk}}_1', text:"不可预约（每天：00:00 ~ {{d.end_hour}}:00）",   start_date:"{{d.get_end_date}}", end_date:"1/1/9999 00:00", device_id:1, readonly:true, color:"#CCCCCC",rec_type:"day_1___", event_length:"{{d.get_end_length}}",},
+            {%else%}
+                {id:'daily_{{d.pk}}', text:"不可预约（每天：{{d.start_hour}}:00 ~ {{d.end_hour}}:00）",   start_date:"{{d.get_start_date}}", end_date:"1/1/9999 00:00", device_id:1, readonly:true, color:"#CCCCCC",rec_type:"day_1___", event_length:"{{d.get_length}}",},
+            {%endif%}
+        {%endfor%}
+
+        {%for d in weeklydisable%}
+            {id:'weekly_{{d.pk}}', text:"不可预约(每周：{{d.get_start_weekday}} {{d.start_hour}}:00 ~ {{d.get_end_weekday}} {{d.end_hour}}:00)",   start_date:"{{d.get_start_date}}", end_date:"1/1/9999 00:00", device_id:1, readonly:true, color:"#CCCCCC",rec_type:"week_1___", event_length:"{{d.get_length}}",},
+        {%endfor%}
+        ];
+    scheduler.parse(events, "json");
+
+
+
+
+scheduler.attachEvent("onEventAdded", function (id,ev) {
+    var post_data = {
+        'id':ev.id,
+        'start_date': ev.start_date.getFullYear() + '-' + (ev.start_date.getMonth()+1) + '-' + ev.start_date.getDate() + ' ' + ev.start_date.getHours()+ ':' + ev.start_date.getMinutes()+ ':' + ev.start_date.getSeconds(),
+        'end_date': ev.end_date.getFullYear() + '-' + (ev.end_date.getMonth()+1) + '-' + ev.end_date.getDate()+ ' ' + ev.end_date.getHours()+ ':' + ev.end_date.getMinutes()+ ':' + ev.end_date.getSeconds(),
+        'remarks': ev.text,
+    }
+  
+    $.ajax({
+        url: '/add/',
+        type: 'post',
+        data: post_data,
+        success: function(data) {
+            if (data.res == false) {
+                 if(confirm("添加失败：" + data.msg + "  刷新页面？")) {
+                    window.location.reload();
+                }
+                scheduler.deleteEvent(id);
+            } else {
+                if (data.confirm == true) {
+                    if (confirm(data.confirm_msg + " 确定添加？")) {
+                        data.data['force'] = 1;
+                        $.ajax({
+                            url: '/add/',
+                            type: 'post',
+                            data: data.data,
+                            success: function(data2) {
+                                if (data2.res == false) {
+                                    if(confirm("添加失败：" + data2.msg + "  刷新页面？")) {
+                                        window.location.reload();
+                                    }
+                                    scheduler.deleteEvent(id);
+                                }
+                            }
+                        })
+                    } else {
+                        window.location.reload();
+                        // scheduler.deleteEvent(id);
+                    }
+                }
+            }
+        }
+    }, 'json');
+});
+scheduler.attachEvent("onEventChanged", function (id,ev) {
+    var data = {
+        'id':ev.id,
+        'start_date': ev.start_date.getFullYear() + '-' + (ev.start_date.getMonth()+1) + '-' + ev.start_date.getDate() + ' ' + ev.start_date.getHours()+ ':' + ev.start_date.getMinutes()+ ':' + ev.start_date.getSeconds(),
+        'end_date': ev.end_date.getFullYear() + '-' + (ev.end_date.getMonth()+1) + '-' + ev.end_date.getDate()+ ' ' + ev.end_date.getHours()+ ':' + ev.end_date.getMinutes()+ ':' + ev.end_date.getSeconds(),
+        'remarks': ev.text,
+    }
+  
+    $.ajax({
+        url: '/update/',
+        type: 'post',
+        data: data,
+        success: function(data) {
+            if (data.res == false) {
+                if(confirm("修改失败：" +data.msg + "  刷新页面？")) {
+                    window.location.reload();
+                } 
+                // window.location.reload();
+            } else {
+                if (data.confirm == true) {
+                    if (confirm("确定修改？")) {
+                        data.data['force'] = 1;
+                        $.ajax({
+                            url: '/update/',
+                            type: 'post',
+                            data: data.data,
+                            success: function(data2) {
+                                if (data2.res == false) {
+                                    if(confirm("修改失败：" + data2.msg + "  刷新页面？")) {
+                                        window.location.reload();
+                                    }
+                                    scheduler.deleteEvent(id);
+                                }
+                            }
+                        })
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            }   
+        }
+    }, 'json');
+});
+scheduler.attachEvent("onEventDeleted", function(id){  
+    $.ajax({
+        url: '/delete/',
+        type: 'post',
+        data: {'id':id},
+        success: function(data) {
+            if (data.res == false) {
+                if(confirm("删除失败：" +data.msg + "  刷新页面？")) {
+                    window.location.reload();
+                } 
+            } else {
+                if (data.confirm == true) {
+                    if (confirm("确定添加？")) {
+                        data.data['force'] = 1;
+                        $.ajax({
+                            url: '/delete/',
+                            type: 'post',
+                            data: data.data,
+                            success: function(data2) {
+                                if (data2.res == false) {
+                                    if(confirm("删除失败：" + data2.msg + "  刷新页面？")) {
+                                        window.location.reload();
+                                    }
+                                    scheduler.deleteEvent(id);
+                                }
+                            }
+                        })
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            }
+
+        }
+    }, 'json');
+});
+
+scheduler.attachEvent("onViewChange", function (new_mode , new_date){
+    reload_url = '/load/?mode='+new_mode+'&t='+new_date.getTime();
+    scheduler.load(reload_url, 'json');
+});
+
+
+scheduler.templates.event_header = function(start,end,ev){
+    var pre = '';
+    if(ev.is_break) {
+        pre = '<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" style="color:red"></span>'
+    }
+    
+    return pre  + scheduler.templates.event_date(start)+"-"+scheduler.templates.event_date(end);
+};
+
+scheduler.templates.lightbox_header = function(start,end,ev){
+    var pre = '';
+    if(ev.is_break) {
+        pre = '<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" style="color:red"></span>'
+    }
+    
+    return pre  + scheduler.templates.event_date(start)+"-"+scheduler.templates.event_date(end);
+};
+
+
+{% if request.user.is_staff %}
+    scheduler.config.icons_select = [
+       "icon_break",
+       "icon_details",
+       "icon_edit",
+       "icon_delete"
+    ];
+    scheduler.locale.labels.icon_break = "标记爽约/取消标记爽约";
+    scheduler._click.buttons.break = function(id){
+        $.ajax({
+            url: '/mark_break/',
+            type: 'post',
+            data: {'id': id},
+            success: function(data) {
+                alert(data.msg);
+                reload();
+            }
+        })
+    };
+{% endif %}
+
+</script>
+{%endblock%}

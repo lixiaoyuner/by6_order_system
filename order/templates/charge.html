@@ -1,0 +1,74 @@
+{%extends 'base.html'%}
+{%block main%}
+<div class="col-xs-offset-1 col-lg-10">
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">金额</label>
+        <div class="col-sm-5">
+        <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
+        <input id="input-money" type="text" class="form-control" placeholder="请输入金额">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">合同编号</label>
+        <div class="col-sm-5">
+        <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
+        <input id="input-contract" type="text" class="form-control" placeholder="请输入合同编号">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">项目名称</label>
+        <div class="col-sm-5">
+        <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
+        <input id="input-project" type="text" class="form-control" placeholder="请输入项目名称">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">负责人</label>
+        <div class="col-sm-5">
+        <!-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> -->
+        <input id="input-header" type="text" class="form-control" placeholder="请输入负责人">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">选择用户</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+            <select class="form-control" id="user-select">
+                {% for user in users %}
+                <option value="{{user.id}}_{{user}}">{{user}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">选择充值类型</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+            <select class="form-control" id="type-select">
+                {% for type in types %}
+                <option value="{{type.id}}">{{type}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">备注</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+        <textarea id="charge-remark" class="form-control" rows="3"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        <button id="charge-submit" type="submit" class="btn btn-default">充值</button>
+        </div>
+    </div>
+</form>
+
+</div>
+
+<script src="/site_media/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="/site_media/js/charge.js"></script>
+{%endblock%}

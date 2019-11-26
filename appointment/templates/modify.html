@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>设备预约系统</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+<body class="login">
+
+<!-- Container -->
+<div id="container">
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+            <h1 id="site-name">设备预约系统</h1>
+        </div>
+    </div>
+    <!-- END Header -->
+    
+    <!-- Content -->
+    <div id="content" class="colM">    
+<div id="content-main">
+<form action="" method="post" id="login-form">
+{% csrf_token %}
+  <div class="form-row">
+    <label for="id_username" class="required">新密码:</label> <input id="id_username" maxlength="254" name="username" type="text" />
+  </div>
+  <div class="form-row">
+    <label for="id_password" class="required">确认密码:</label> <input id="id_password" maxlength="254" name="username" type="text" />
+  </div>
+  
+  <div class="submit-row">
+    <label>&nbsp;&nbsp;</label><input id="submit-mail" type="submit" value="修改" />
+  </div>
+</form>
+
+<script type="text/javascript">
+document.getElementById('id_username').focus()
+</script>
+</div>
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+<script type="text/javascript" src="/site_media/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $('#submit-mail').click(function(event){
+        event.preventDefault()
+        if($('#id_username').val() == '' || $('#id_password').val() == ''){
+            alert('不能为空');
+            return  
+        }
+        if($('#id_username').val() != $('#id_password').val()){
+            alert('两次输入密码不同');
+            return  
+        }
+        var form = $("<form method='post'></form>");
+        var input;
+        form.attr({"action": window.location.href});
+        params = {"password": $('#id_password').val()}
+        $.each(params,function (key,value) {
+            input = $("<input type='hidden'>");
+            input.attr({"name":key});
+            input.val(value);
+            form.append(input);
+        });
+        $(document.body).append(form);
+        form.submit();
+    })
+</script>
+</body>
+</html>
+
+

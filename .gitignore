@@ -1,0 +1,9 @@
+*.py[cod]
+.idea
+/.vscode/
+*.sqlite3
+*__pycache__/
+*.so
+*.log
+*_settings.py
+

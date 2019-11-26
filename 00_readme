@@ -1,0 +1,5 @@
+调试运行：
+python36 manage.py runserver 0:3333
+
+相关依赖：
+pip3 install python-dateutil

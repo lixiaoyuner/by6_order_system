@@ -1,0 +1,81 @@
+{%extends 'base.html'%}
+{% block main %}
+<!-- <link type="text/css" href="/site_media/datepicker/datepicker.css" rel="stylesheet"/> -->
+
+<div class="col-xs-offset-1 col-lg-10">
+    <div class="text-center">
+        <form method="get">
+            时间范围：
+            <input id="start_time" name="start_time" value="{{ start_time|date:'Y-m-d' }}"> -
+            <input id="end_time" name="end_time" value="{{ end_time|date:'Y-m-d' }}">
+            <button type="submit">查询</button>
+            <button id="export">导出</button>
+        </form>
+    </div>
+    <hr class="row" style=" height:1px;border:1px;border-top:1px solid #185598;"/>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h3>统计结果（{{ start_time|date:'Y-m-d' }} 至 {{ end_time|date:'Y-m-d' }}）</h3>
+                <h4>预约总时长： {{ total_time }}</h4>
+            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>用户</th>
+                    <th>预约时间</th>
+                    <th>预约时长</th>
+                    <th>预约花费</th>
+                    <th>预约总时长</th>
+                </tr>
+                {% for user in data.items %}
+                    <tr>
+                        <td rowspan="{{ user.1.apps|length }}">
+                            {% if user.1.user.first_name %}{{ user.1.user.first_name }}{% else %}
+                                {{ user.1.user.username }}{% endif %}</td>
+                        <td class="show-pay" value="{{ user.1.apps.0.4 }}">{{ user.1.apps.0.0|date:'Y-m-d H:i:s' }} --
+                            {{ user.1.apps.0.1|date:'Y-m-d H:i:s' }}</td>
+                        <td>{{ user.1.apps.0.2 }}</td>
+                        <td>{{ user.1.apps.0.3 }}</td>
+                        <td rowspan="{{ user.1.apps|length }}">{{ user.1.count }}</td>
+                    </tr>
+                    {% for obj in user.1.apps %}
+                        {% if not forloop.first %}
+                            <tr>
+                                <td class="show-pay" value="{{ obj.4 }}">{{ obj.0|date:'Y-m-d H:i:s' }} --
+                                    {{ obj.1|date:'Y-m-d H:i:s' }}</td>
+                                <td>{{ obj.2 }}</td>
+                                <td>{{ obj.3 }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <br>
+</div>
+
+<div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    支付明细
+                </h4>
+            </div>
+            <div id="pay-content" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script type="text/javascript" src="/site_media/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/site_media/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/site_media/js/stats.js"></script>
+{% endblock %}
+   

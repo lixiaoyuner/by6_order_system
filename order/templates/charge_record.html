@@ -1,0 +1,63 @@
+{%extends 'base.html'%}
+{%block main%}
+<div class="col-xs-offset-1 col-lg-10">
+    <table id="charge-table"
+        data-toggle="table" 
+        data-search="true"
+        data-pagination="true"
+        data-page-size="8">
+    <thead>
+        <tr>
+        <th>充值时间</th>
+        <th>充值金额</th>
+        <th>剩余金额</th>
+        <th>充值用户</th>
+        <th>充值类型</th>
+        <th>合同编号</th>
+        <th>项目名称</th>
+        <th>负责人型</th>
+        <th>备注</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for charge in charges %}
+        <tr>
+        <td class="show-appointment" id="{{charge.id}}">{{charge.time}}</td>
+        <td>{{charge.money}}</td>
+        <td>{{charge.rest_money}}</td>
+        <td>{{charge.user}}</td>
+        <td>{{charge.type}}</td>
+        <td>{{charge.contract}}</td>
+        <td>{{charge.project}}</td>
+        <td>{{charge.header}}</td>
+        <td>{{charge.remarks}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+</div>
+
+<div class="modal fade" id="appointmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    预约详情
+                </h4>
+            </div>
+            <div id="appointment-content" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script src="/site_media/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="/site_media/js/charge.js"></script>
+{%endblock%}

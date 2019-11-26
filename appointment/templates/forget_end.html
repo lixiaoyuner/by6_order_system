@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>设备预约系统</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+<body class="login">
+
+<!-- Container -->
+<div id="container">
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+            <h1 id="site-name">{{res}}</h1>
+        </div>
+    </div>
+    <!-- END Header -->
+    
+    {% if res == '修改成功' or res == '修改失败，该链接已失效，请重新申请' %}
+    <div id="footer">
+        <label>3秒后跳转到登录页面</label>
+    </div>
+    {% endif %}
+    
+</div>
+<!-- END Container -->
+<script type="text/javascript" src="/site_media/js/jquery.min.js"></script>
+<script type="text/javascript">
+    if($('#site-name').html() == '修改成功' || $('#site-name').html() == '修改失败，该链接已失效，请重新申请'){
+        window.setTimeout(function(){    
+            location.href='/';       
+        }, 4000);
+    }
+</script>
+</body>
+</html>
+
+
