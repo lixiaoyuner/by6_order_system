@@ -3,21 +3,21 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.utils.timezone import localtime
 
-from order.models import Chargetype, Charge, Pay, PayType
+from order.models import Chargetype, Charge, Pay, PayType, Overtime
 from appointment.models import Appointment
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User, Group
 
 from datetime import datetime, timedelta
 
-User = get_user_model()
 # Create your views here.
 @login_required
 def charge(request):
     if request.method == 'GET':
         users = User.objects.all()
+        groups = Group.objects.all()
         # print(request.user.__class__)
         types = Chargetype.objects.all()
-        return render(request, 'charge.html', {'users': users, 'types': types})
+        return render(request, 'charge.html', {'users': users, 'types': types, 'groups': groups})
     elif request.method == 'POST':
         data = {}
         user = User.objects.get(id=int(request.POST.get('user_id')))
@@ -78,9 +78,9 @@ def my_charge_record(request):
 def deduct(request):
     if request.method == 'GET':
         users = User.objects.all()
-        appointments = Appointment.objects.filter(start_time__gt=datetime.now()-timedelta(days=30)).order_by('-start_time')
-        types = PayType.objects.all()
-        return render(request, 'deduct.html', {'appointments': appointments, 'types': types, 'users':users})
+        # appointments = Appointment.objects.filter(start_time__gt=datetime.now()-timedelta(days=30)).order_by('-start_time')
+        # types = PayType.objects.all()
+        return render(request, 'deduct.html', {'users':users})
     elif request.method == 'POST':
         res = {}
         user_id = request.POST.get('user_id')
@@ -93,16 +93,36 @@ def deduct(request):
             res['ok'], res['msg'] = False, '时间选择有误'
             return JsonResponse(res)
         try:
-            Appointment.objects.create(user_id=user_id, start_time=start_time, end_time=end_time, remark=remark, last_edit_time=datetime.now())
+            Appointment.objects.create(user_id=user_id, start_time=start_time, end_time=end_time, remarks=remark, last_edit_time=datetime.now(), status=1)
             # appointment = Appointment.objects.get(id=appointment_id)
             # pay = Pay.objects.filter(appointment=appointment)[0]
             # type = PayType.objects.get(id=type_id)
             # pay.charge.rest_money -= money
             # pay.charge.save()
             # Pay.objects.create(money=money, charge=pay.charge, appointment=appointment, type=type, remarks=remark)
-            # res['ok'], res['msg'] = True, '补缴成功'
+            res['ok'], res['msg'] = True, '补时成功'
         except Exception as error:
             print(str(error))
             res['ok'], res['msg'] = False, '数据库写入失败'
 
         return JsonResponse(res)
+
+@login_required
+def set_overtime(request):
+    if request.method == 'GET':
+        return render(request, 'set_overtime.html')
+    elif request.method == 'POST':
+        res = {}
+        on = bool(int(request.POST.get('overtime_value')))
+        date = request.POST.get('date')
+        date = datetime.strptime(date, '%Y-%m-%d')
+        try:
+            Overtime.objects.update_or_create(date=date, defaults={'date': date, 'on': on})
+            res['ok'], res['msg'] = True, '设置成功'
+        except Exception as error:
+            print(str(error))
+            res['ok'], res['msg'] = False, '数据库写入失败'
+
+        return JsonResponse(res)
+        
+

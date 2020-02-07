@@ -5,7 +5,7 @@ from appointment.models import Appointment
 # Create your models here.
 
 class Chargetype(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True)
     name = models.CharField('类型名称', max_length=100, unique=True)
     value = models.IntegerField('扣费方式，*元/小时')
 
@@ -42,7 +42,7 @@ class Charge(models.Model):
 
 
 class PayType(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True)
     name = models.CharField('类型名称', max_length=100, unique=True)
     value = models.IntegerField('加班费单价（维护），*元/小时', default=1)
 
@@ -70,9 +70,13 @@ class Pay(models.Model):
         verbose_name_plural = '消费列表'
 
 class Overtime(models.Model):
+    OVERTIME_CHOICES = (
+        (True, '加班日'),
+        (False, '非加班日'),
+    )
     id = models.AutoField(primary_key=True)
     date = models.DateField('日期')
-    on = models.BooleanField('是否加班日', default=True)
+    on = models.BooleanField('是否加班日', choices=OVERTIME_CHOICES, default=True)
 
     class Meta:
         verbose_name = '加班日期'

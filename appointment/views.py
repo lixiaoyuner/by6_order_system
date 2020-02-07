@@ -378,6 +378,7 @@ def my_appointment(request):
         dicts['start_time'] = start_time
         dicts['end_time'] = end_time
         return render(request, 'stats.html', dicts)
+
     elif request.method == 'POST':
         res, string = {}, ''
         id = request.POST.get('id')
@@ -477,12 +478,12 @@ def stats_data(objs:QuerySet):
         time_span = obj.end_time - obj.start_time
         total_time += time_span
         if obj.user_id in res:
-            res[obj.user_id]['apps'].append((obj.start_time, obj.end_time, obj.end_time - obj.start_time, obj.money, obj.id))
+            res[obj.user_id]['apps'].append((obj.start_time, obj.end_time, obj.end_time - obj.start_time, obj.money, obj.order_money, obj.over_money, obj.id))
             res[obj.user_id]['count'] += time_span
         else:
             res[obj.user_id] = {
                 'user': obj.user,
-                'apps': [(obj.start_time, obj.end_time, obj.end_time - obj.start_time, obj.money, obj.id)],
+                'apps': [(obj.start_time, obj.end_time, obj.end_time - obj.start_time, obj.money, obj.order_money, obj.over_money, obj.id)],
                 'count': time_span,
             }
 

@@ -1,11 +1,8 @@
 $(document).ready(function(){
     
-    $('#deduct-submit').click(function(event){
+    $('#overtime-submit').click(function(event){
         event.preventDefault()
-        if($('#datetimepicker-start').val() == ''){
-            Swal.fire('输入时间不能为空');
-            return
-        }else if($('#datetimepicker-end').val() == ''){
+        if($('#datetimepicker-overtime').val() == ''){
             Swal.fire('输入时间不能为空');
             return
         }else{
@@ -16,17 +13,15 @@ $(document).ready(function(){
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: '充值'
+                confirmButtonText: '设置'
               }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '/order/pay/deduct/',
+                        url: '/order/set_overtime/',
                         type: "POST",
                         data: {
-                            "user_id": $('#user-select').val(),
-                            "start_time": $('#datetimepicker-start').val(),
-                            "end_time": $('#datetimepicker-end').val(),
-                            "remark": $('#deduct-remark').val(),
+                            "overtime_value": $('#overtime-select').val(),
+                            "date": $('#datetimepicker-overtime').val(),
                             "csrfmiddlewaretoken": $('[name="csrfmiddlewaretoken"]').val(),
                         },
                         datatype: "json",
@@ -34,9 +29,7 @@ $(document).ready(function(){
                             if(data.ok){
                                 Swal.fire(
                                     data.msg,
-                                ).then((result) => {
-                                    window.location.href = '/';
-                                })
+                                )
                             }else{
                                 Swal.fire(
                                     data.msg,
@@ -59,15 +52,10 @@ $(document).ready(function(){
     })
 
     $(function () {
-        $('#datetimepicker-start').datetimepicker({
+        $('#datetimepicker-overtime').datetimepicker({
             language: 'zh-CN',
-            autoclose: true,
-        });
-    });
-
-    $(function () {
-        $('#datetimepicker-end').datetimepicker({
-            language: 'zh-CN',
+            format: 'yyyy-mm-dd',
+            minView: "month",
             autoclose: true,
         });
     });

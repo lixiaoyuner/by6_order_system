@@ -32,12 +32,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label">选择用户</label>
+        <label class="col-sm-2 control-label">选择用户组</label>
         <div class="col-sm-5">
         <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
             <select class="form-control" id="user-select">
-                {% for user in users %}
-                <option value="{{user.id}}_{{user}}">{{user}}</option>
+                {% for group in groups %}
+                <option value="{{group.name}}">{{group.name}}</option>
                 {% endfor %}
             </select>
         </div>

@@ -25,6 +25,8 @@
                     <th>预约时间</th>
                     <th>预约时长</th>
                     <th>预约花费</th>
+                    <th>预约费</th>
+                    <th>加班费</th>
                     <th>预约总时长</th>
                 </tr>
                 {% for user in data.items %}
@@ -32,19 +34,23 @@
                         <td rowspan="{{ user.1.apps|length }}">
                             {% if user.1.user.first_name %}{{ user.1.user.first_name }}{% else %}
                                 {{ user.1.user.username }}{% endif %}</td>
-                        <td class="show-pay" value="{{ user.1.apps.0.4 }}">{{ user.1.apps.0.0|date:'Y-m-d H:i:s' }} --
+                        <td class="" value="{{ user.1.apps.0.6 }}">{{ user.1.apps.0.0|date:'Y-m-d H:i:s' }} --
                             {{ user.1.apps.0.1|date:'Y-m-d H:i:s' }}</td>
                         <td>{{ user.1.apps.0.2 }}</td>
                         <td>{{ user.1.apps.0.3 }}</td>
+                        <td>{{ user.1.apps.0.4 }}</td>
+                        <td>{{ user.1.apps.0.5 }}</td>
                         <td rowspan="{{ user.1.apps|length }}">{{ user.1.count }}</td>
                     </tr>
                     {% for obj in user.1.apps %}
                         {% if not forloop.first %}
                             <tr>
-                                <td class="show-pay" value="{{ obj.4 }}">{{ obj.0|date:'Y-m-d H:i:s' }} --
+                                <td class="" value="{{ obj.6 }}">{{ obj.0|date:'Y-m-d H:i:s' }} --
                                     {{ obj.1|date:'Y-m-d H:i:s' }}</td>
                                 <td>{{ obj.2 }}</td>
                                 <td>{{ obj.3 }}</td>
+                                <td>{{ obj.4 }}</td>
+                                <td>{{ obj.5 }}</td>
                             </tr>
                         {% endif %}
                     {% endfor %}

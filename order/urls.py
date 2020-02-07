@@ -13,4 +13,5 @@ urlpatterns = [
     path('charge/record/', views.charge_record, name='charge_record'),
     path('charge/myrecord/', views.my_charge_record, name='my-charge'),
     path('pay/deduct/', views.deduct, name='deduct'),
+    path('set_overtime/', views.set_overtime, name='set_overtime'),
 ]

@@ -286,7 +286,12 @@ class Appointment(models.Model):
     
     @property
     def order_money(self):
-        return self.pay.get(type_id=4).money
+        try:
+            pay = self.pay.get(type_id=4)
+            return pay.money
+        except Exception:  
+            return 0
+        # return self.pay.get(type_id=4).money
 
     @property
     def over_money(self):
@@ -320,13 +325,13 @@ class Appointment(models.Model):
             return False, '保存失败'
         return True, '保存成功'
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.id == None or self.id == '':
             #self.id = str(time.time())[:10] + ''.join([str(randint(0,9)) for i in range(3)])
             self.id =  str(int(time.time()*1000))
         self.last_edit_time = timezone.now()
         self.draft = True
-        super(self.__class__, self).save()
+        super(self.__class__, self).save(*args, **kwargs)
 
     def set_draft(self, if_draft):
         if if_draft != True:

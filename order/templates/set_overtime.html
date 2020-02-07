@@ -1,0 +1,41 @@
+{%extends 'base.html'%}
+{%block main%}
+<div class="col-xs-offset-1 col-lg-10">
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">日期</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+            <div class='input-group date'>
+                <input type='text' class="form-control" id='datetimepicker-overtime'/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否为加班日</label>
+        <div class="col-sm-5">
+        <!-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> -->
+            <select class="form-control" id="overtime-select">
+                <option value="1">加班日</option>
+                <option value="0">非加班日</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        <button id="overtime-submit" type="submit" class="btn btn-default">设置</button>
+        </div>
+    </div>
+</form>
+
+</div>
+
+<script src="/site_media/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="/site_media/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/site_media/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/site_media/js/overtime.js"></script>
+{%endblock%}

@@ -49,15 +49,15 @@ if __name__ == "__main__":
             print("    未满draft保持时间，仍然保持draft，处理下一条")
             continue
         add_time=this_draft.add_time.replace(tzinfo=None)
-        if add_time < datetime.datetime(2019, 10, 21, 12, 0, 0):
+        if add_time < datetime.datetime(2019, 12, 6, 0, 0, 0):
             continue
         try:
             order_money, overtime_money = OrderManager().order(this_draft.user, this_draft.start_time, this_draft.end_time, this_draft)
         except IndexError:
             if this_draft.user.email:
-                email_list =email_list + [this_draft.user.email]
+                emails =email_list + [this_draft.user.email]
             mail = Mail()
-            mail.receiver = ','.join(email_list)
+            mail.receiver = ','.join(emails)
             mail.subject = u'预约失败，账户余额不足。%(username)s 提交了设备使用预约'% {'username': this_draft.user.username}
             mail.content = u'''
     %(username)s 于 %(last_edit_time)s 提交了设备使用预约申请，使用时间段为：
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         'apply_ip': this_draft.apply_ip,
         }
             # this_draft.set_draft(False) #代码重构了save(), 并添加了set_draft() 方法
-            print("所有收件人的邮箱地址：",end='');print(mail.receiver)
+            print("所有收件人的邮箱地址：",end='');print(emails)
             print(mail.subject)
             print(mail.content)
             mail.send('script')
@@ -78,9 +78,9 @@ if __name__ == "__main__":
             continue
         #最后修改时间已经满draft_minutes，发邮件并调整为非 draft状态
         if this_draft.user.email:
-            email_list =email_list + [this_draft.user.email]
+            emails =email_list + [this_draft.user.email]
         mail = Mail()
-        mail.receiver = ','.join(email_list)
+        mail.receiver = ','.join(emails)
         mail.subject = u'%(username)s 提交了设备使用预约'% {'username': this_draft.user.username}
         mail.content = u'''
 %(username)s 于 %(last_edit_time)s 提交了设备使用预约申请，使用时间段为：
@@ -96,7 +96,7 @@ if __name__ == "__main__":
        'order_money': order_money, 
         }   
         this_draft.set_draft(False) #代码重构了save(), 并添加了set_draft() 方法
-        print("所有收件人的邮箱地址：",end='');print(mail.receiver)
+        print("所有收件人的邮箱地址：",end='');print(emails)
         print(mail.subject)
         print(mail.content)
         mail.send('script')
