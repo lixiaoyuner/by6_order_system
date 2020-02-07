@@ -29,7 +29,7 @@ $(document).ready(function(){
                         url: '/order/charge/',
                         type: "POST",
                         data: {
-                            "user_id": $('#user-select').val().split('_')[0],
+                            "user_id": $('#user-select').val(),
                             "type_id": $('#type-select').val(),
                             "money": $('#input-money').val(),
                             "contract": $('#input-contract').val(),

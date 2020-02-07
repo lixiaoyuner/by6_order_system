@@ -10,9 +10,9 @@ admin.site.register(Chargetype, ChargeTypeAdmin)
 
 class ChargeAdmin(admin.ModelAdmin):
     list_display_links = ('time',)
-    list_display = ( 'time', 'money', 'rest_money', 'user', 'type', 'remarks')
+    list_display = ( 'time', 'money', 'rest_money', 'group', 'type', 'remarks')
     search_fields =  ['time']
-    list_filter = ['type', 'user']
+    list_filter = ['type', 'group']
     ordering = ('time',)
 
 admin.site.register(Charge, ChargeAdmin)

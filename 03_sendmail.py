@@ -49,7 +49,7 @@ if __name__ == "__main__":
             print("    未满draft保持时间，仍然保持draft，处理下一条")
             continue
         add_time=this_draft.add_time.replace(tzinfo=None)
-        if add_time < datetime.datetime(2019, 12, 6, 0, 0, 0):
+        if add_time < datetime.datetime(2020, 2, 6, 0, 0, 0):
             continue
         try:
             order_money, overtime_money = OrderManager().order(this_draft.user, this_draft.start_time, this_draft.end_time, this_draft)

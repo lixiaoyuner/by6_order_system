@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from appointment.models import Appointment
 
 # Create your models here.
@@ -22,7 +22,7 @@ class Charge(models.Model):
     time = models.DateTimeField('充值时间', auto_now_add=True)
     money = models.IntegerField('充值金额')
     rest_money = models.IntegerField('剩余金额')
-    user = models.ForeignKey(User, verbose_name='申请用户', on_delete=models.PROTECT)
+    group = models.ForeignKey(Group, verbose_name='申请用户组', on_delete=models.PROTECT)
     type = models.ForeignKey(Chargetype, on_delete=models.PROTECT, verbose_name='类型')
     contract = models.CharField('合同编号', max_length=100, null=True, blank=True,default='')
     project = models.CharField('项目名称', max_length=200, null=True, blank=True,default='')

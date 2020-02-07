@@ -3,6 +3,7 @@ from site_parameter.models import Parameter
 from .models import Pay, Charge, PayType, Overtime
 
 from django.utils.timezone import localtime
+from django.contrib.auth.models import Group
 
 class OrderError(Exception):
     '''
@@ -34,7 +35,8 @@ class OrderError(Exception):
 class OrderManager():
     def can_order(self, user):
         try:
-            charges = Charge.objects.filter(user=user, rest_money__gt=0)
+            groups = Group.objects.filter(user=user)
+            charges = Charge.objects.filter(group__in=groups, rest_money__gt=0)
         except:
             return False, '可用充值卡查询失败'
 
@@ -46,11 +48,12 @@ class OrderManager():
     def order(self, user, start_time, end_time, appointment):
         try:
             # print('--------', user, start_time, end_time, appointment)
-            charges = Charge.objects.filter(user=user, rest_money__gt=0)
-            if charges:
-                charge = charges[0]
+            flag, charges = self.can_order(user)
+            if flag:
+                charge = charges
             elif appointment.status == 1:
-                charge =  Charge.objects.filter(user=user).order_by('-time')[0]
+                groups = Group.objects.filter(user=user)
+                charges = Charge.objects.filter(group__in=groups)[0]
             else:
                 raise IndexError
             price = charge.type.value // 12
@@ -90,7 +93,7 @@ class OrderManager():
 
         mor_minutes = on_time - morning_minutes if on_time > morning_minutes else 0
         aft_minute = afternoon_minute - out_time if afternoon_minute > out_time else 0
-        flag = start_time.weekday() == 6 or start_time.weekday() == 7
+        flag = start_time.weekday() == 5 or start_time.weekday() == 6
         # print(flag)
         flag = flag and not Overtime.objects.filter(date=start_time.date(), on=False)
         # print(flag, '0000000')

@@ -1,0 +1,28 @@
+{%extends 'base.html'%}
+{%block main%}
+
+<div class="col-xs-offset-1 col-lg-10">
+    <div class="toolbar">
+        <span id="total">余额：0元</span>
+    </div>
+    <table id="charge-table"
+        data-toggle="table" 
+        data-search="true"
+        data-toolbar=".toolbar"
+        data-pagination="true"
+        data-page-size="8">
+    <thead>
+        <tr>
+        <th>{{ msg }}</th>
+        
+        </tr>
+    </thead>
+    
+    </table>
+</div>
+</div>
+
+
+<script src="/site_media/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="/site_media/js/charge.js"></script>
+{%endblock%}

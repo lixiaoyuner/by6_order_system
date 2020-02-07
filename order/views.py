@@ -13,14 +13,14 @@ from datetime import datetime, timedelta
 @login_required
 def charge(request):
     if request.method == 'GET':
-        users = User.objects.all()
+        # users = User.objects.all()
         groups = Group.objects.all()
         # print(request.user.__class__)
         types = Chargetype.objects.all()
-        return render(request, 'charge.html', {'users': users, 'types': types, 'groups': groups})
+        return render(request, 'charge.html', {'types': types, 'groups': groups})
     elif request.method == 'POST':
         data = {}
-        user = User.objects.get(id=int(request.POST.get('user_id')))
+        group = Group.objects.get(name=request.POST.get('user_id')) #修改前为用户id，为了对应前端，不做修改
         type = Chargetype.objects.get(id=int(request.POST.get('type_id')))
         money = request.POST.get('money')
         if not money.isnumeric():
@@ -33,7 +33,7 @@ def charge(request):
         project = request.POST.get('project')
         header = request.POST.get('header')
         try:
-            Charge.objects.create(user=user, type=type, money=money, rest_money=money, remarks=remark, contract=contract, project=project, header=header)
+            Charge.objects.create(group=group, type=type, money=money, rest_money=money, remarks=remark, contract=contract, project=project, header=header)
             data['ok'] = True
             data['msg'] = '成功充值'
         except Exception as error:
@@ -52,7 +52,11 @@ def charge_record(request):
 @login_required
 def my_charge_record(request):
     if request.method == 'GET':
-        charges = Charge.objects.filter(user=request.user).order_by('-time')
+        user = request.user
+        groups = Group.objects.filter(user=user)
+        if not groups:
+            return render(request, 'error.html', {'msg': '您不属于任何组,请联系管理员添加!'})
+        charges = Charge.objects.filter(group__in=groups).order_by('-time')
         rest_money = sum([charge.rest_money for charge in charges if charge.rest_money > 0])
         return render(request, 'my_charge_record.html', {'charges': charges, 'rest_money': rest_money})
     elif request.method == 'POST':
