@@ -128,5 +128,13 @@ def set_overtime(request):
             res['ok'], res['msg'] = False, '数据库写入失败'
 
         return JsonResponse(res)
-        
+
+@login_required
+def show_group(request):
+    groups = Group.objects.all()
+    for group in groups:
+        users = User.objects.filter(groups=group)
+        group.__setattr__('users', '，'.join([user.username for user in users]))
+
+    return render(request, 'group.html', {'groups': groups})
 

@@ -8,29 +8,15 @@
         data-page-size="8">
     <thead>
         <tr>
-        <th>充值时间</th>
-        <th>充值金额</th>
-        <th>剩余金额</th>
-        <th>充值用户组</th>
-        <th>充值类型</th>
-        <th>合同编号</th>
-        <th>项目名称</th>
-        <th>负责人</th>
-        <th>备注</th>
+        <th>组名</th>
+        <th>组内成员</th>
         </tr>
     </thead>
     <tbody>
-        {% for charge in charges %}
+        {% for group in groups %}
         <tr>
-        <td class="show-appointment" id="{{charge.id}}">{{charge.time}}</td>
-        <td>{{charge.money}}</td>
-        <td>{{charge.rest_money}}</td>
-        <td>{{charge.group}}</td>
-        <td>{{charge.type}}</td>
-        <td>{{charge.contract}}</td>
-        <td>{{charge.project}}</td>
-        <td>{{charge.header}}</td>
-        <td>{{charge.remarks}}</td>
+        <td>{{group.name}}</td>
+        <td>{{group.users}}</td>
         </tr>
         {% endfor %}
     </tbody>
