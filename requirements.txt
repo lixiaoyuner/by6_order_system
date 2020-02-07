@@ -1,7 +1,6 @@
--i https://pypi.org/simple
+Django==2.2.7
 django-ckeditor==5.8.0
 django-js-asset==1.2.2
-django==2.2.7
 mysqlclient==1.4.6
 python-dateutil==2.8.1
 pytz==2019.3
