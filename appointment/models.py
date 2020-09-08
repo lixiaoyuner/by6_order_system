@@ -339,6 +339,10 @@ class Appointment(models.Model):
         self.draft = if_draft
         super(self.__class__, self).save()
 
+    def set_status(self, status):
+        self.status = status
+        super(self.__class__, self).save()
+
     def set_break(self, is_break):
         if is_break != True:
             is_break = False
