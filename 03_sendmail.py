@@ -51,31 +51,32 @@ if __name__ == "__main__":
         add_time=this_draft.add_time.replace(tzinfo=None)
         if add_time < datetime.datetime(2020, 2, 6, 0, 0, 0):
             continue
-        try:
-            order_money, overtime_money = OrderManager().order(this_draft.user, this_draft.start_time, this_draft.end_time, this_draft)
-        except IndexError:
-            if this_draft.user.email:
-                emails =email_list + [this_draft.user.email]
-            mail = Mail()
-            mail.receiver = ','.join(emails)
-            mail.subject = u'预约失败，账户余额不足。%(username)s 提交了设备使用预约'% {'username': this_draft.user.username}
-            mail.content = u'''
-    %(username)s 于 %(last_edit_time)s 提交了设备使用预约申请，使用时间段为：
-        %(start_time)s 到 %(end_time)s 。
-    申请人IP地址 %(apply_ip)s 。由于账户余额不足，预约失败，已删除预约记录。
-    ''' % {'username': this_draft.user.username,
-        'last_edit_time': localtime(this_draft.last_edit_time).strftime('%Y-%m-%d %H:%M:%S'),
-        'start_time': localtime(this_draft.start_time).strftime('%Y-%m-%d %H:%M:%S'),
-        'end_time': localtime(this_draft.end_time).strftime('%Y-%m-%d %H:%M:%S'),
-        'apply_ip': this_draft.apply_ip,
-        }
-            # this_draft.set_draft(False) #代码重构了save(), 并添加了set_draft() 方法
-            print("所有收件人的邮箱地址：",end='');print(emails)
-            print(mail.subject)
-            print(mail.content)
-            mail.send('script')
-            this_draft.delete()
-            continue
+        if not this_draft.user.is_staff:
+	    try:
+		order_money, overtime_money = OrderManager().order(this_draft.user, this_draft.start_time, this_draft.end_time, this_draft)
+	    except IndexError:
+		if this_draft.user.email:
+		    emails =email_list + [this_draft.user.email]
+		mail = Mail()
+		mail.receiver = ','.join(emails)
+		mail.subject = u'预约失败，账户余额不足。%(username)s 提交了设备使用预约'% {'username': this_draft.user.username}
+		mail.content = u'''
+	%(username)s 于 %(last_edit_time)s 提交了设备使用预约申请，使用时间段为：
+	    %(start_time)s 到 %(end_time)s 。
+	申请人IP地址 %(apply_ip)s 。由于账户余额不足，预约失败，已删除预约记录。
+	''' % {'username': this_draft.user.username,
+	    'last_edit_time': localtime(this_draft.last_edit_time).strftime('%Y-%m-%d %H:%M:%S'),
+	    'start_time': localtime(this_draft.start_time).strftime('%Y-%m-%d %H:%M:%S'),
+	    'end_time': localtime(this_draft.end_time).strftime('%Y-%m-%d %H:%M:%S'),
+	    'apply_ip': this_draft.apply_ip,
+	    }
+		# this_draft.set_draft(False) #代码重构了save(), 并添加了set_draft() 方法
+		print("所有收件人的邮箱地址：",end='');print(emails)
+		print(mail.subject)
+		print(mail.content)
+		mail.send('script')
+		this_draft.delete()
+		continue
         #最后修改时间已经满draft_minutes，发邮件并调整为非 draft状态
         if this_draft.user.email:
             emails =email_list + [this_draft.user.email]
