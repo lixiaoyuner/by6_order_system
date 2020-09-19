@@ -13,7 +13,7 @@ class ChargeAdmin(admin.ModelAdmin):
     list_display = ( 'time', 'money', 'rest_money', 'group', 'type', 'remarks')
     search_fields =  ['time']
     list_filter = ['type', 'group']
-    ordering = ('time',)
+    ordering = ('-time',)
 
 admin.site.register(Charge, ChargeAdmin)
 

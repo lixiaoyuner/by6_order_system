@@ -53,7 +53,7 @@ class OrderManager():
                 charge = charges
             elif appointment.status == 1:
                 groups = Group.objects.filter(user=user)
-                charges = Charge.objects.filter(group__in=groups)[0]
+                charge = Charge.objects.filter(group__in=groups)[0]
             else:
                 raise IndexError
             price = charge.type.value // 12

@@ -103,10 +103,11 @@ def add(request):
         if in_punishment:
             return render_to_response_json({'res': False, 'msg': '由于您近期多次爽约，预约权限被暂时取消。 处罚截止日期：【' 
                 + localtime(punish_end_time).strftime('%Y-%m-%d %H:%M:%S') + '】'})
-    ok, res = OrderManager().can_order(request.user)
-    print('-------', ok, res)
-    if not ok:
-        return render_to_response_json({'res': ok, 'msg': res})
+    if not request.user.is_staff:
+        ok, res = OrderManager().can_order(request.user)
+        #print('-------', ok, res)
+        if not ok:
+            return render_to_response_json({'res': ok, 'msg': res})
     id = request.POST.get('id', None)
     start_time = request.POST.get('start_date', None)
     end_time = request.POST.get('end_date', None)
@@ -399,8 +400,9 @@ def export(request):
     res = {chargetype.name: [0, chargetype.value] for chargetype in chargetypes}
     res['加班费用'] = [0, paytype.value]
     for appointment in appointments:
-        res[appointment.charge_type][0] += appointment.order_money
-        res['加班费用'][0] += appointment.over_money
+        if appointment.charge_type:
+            res[appointment.charge_type][0] += appointment.order_money
+            res['加班费用'][0] += appointment.over_money
     # print(res)
     # print(sum(appointment.money for appointment in appointments))
     workbook = xlwt.Workbook()

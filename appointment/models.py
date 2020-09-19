@@ -303,7 +303,11 @@ class Appointment(models.Model):
 
     @property
     def charge_type(self):
-        return self.pay.all()[0].charge.charge_type
+        try:
+            type = self.pay.all()[0].charge.charge_type
+            return type
+        except:
+            return None
 
     def safe_save(self, request):
         if type(self.start_time) != datetime.datetime:
