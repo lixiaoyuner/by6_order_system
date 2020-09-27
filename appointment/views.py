@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from utils import render_to_response_json
 from .models import  Appointment, OnceDisablePeriod, DailyDisablePeriod, WeeklyDisablePeriod, HourRange, WeekdayRange, Punishment
 from order.managers import OrderManager
-from order.models import Pay, Charge, PayType, Chargetype
+from order.models import Pay, Charge, PayType, Chargetype, Overtime
 
 import xlwt
 import hashlib
@@ -146,7 +146,11 @@ def add(request):
         #         }})
         return render_to_response_json({'res': res, 'msg': msg})
 
-    res, msg = ap.safe_save(request)
+    flag = bool(Overtime.objects.filter(date=ap.start_time.date(), on=False))
+    if flag:
+        res, msg = ap.holiday_safe_save(request)
+    else:
+        res, msg = ap.safe_save(request)
     return render_to_response_json({'res':res, 'msg': msg})
 
 @login_required
@@ -199,7 +203,12 @@ def update(request):
     obj.start_time = start_time
     obj.end_time = end_time
     obj.remarks = remarks
-    res, msg = obj.safe_save(request)
+    flag = bool(Overtime.objects.filter(date=obj.start_time.date(), on=False))
+    if flag:
+        res, msg = obj.holiday_safe_save(request)
+    else:
+        res, msg = obj.safe_save(request)
+    #res, msg = obj.safe_save(request)
     pays = Pay.objects.filter(appointment=obj)
     back_money = 0
     charge = 0

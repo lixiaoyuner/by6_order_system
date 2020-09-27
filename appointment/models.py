@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from random import randint
 from django.utils import timezone
 
-# from order.models import Pay
+#from order.models import Overtime
 
 
 
@@ -318,6 +318,23 @@ class Appointment(models.Model):
         if not request.user.is_staff and in_disable_period(self.start_time, self.end_time):
             return False, '包含不可申请时段'
 
+        exists = self.__class__.objects.filter(
+            (Q(start_time__lte=self.start_time) & Q(end_time__gt=self.start_time)) | 
+            (Q(start_time__gte=self.start_time) & Q(start_time__lt=self.end_time))).exclude(pk=self.pk).exists()
+        if exists:
+            return False, '时间冲突'
+        try:
+            self.save()
+        except:
+            return False, '保存失败'
+        return True, '保存成功'
+
+    def holiday_safe_save(self, request):
+        if type(self.start_time) != datetime.datetime:
+            self.start_time = datetime.datetime.strptime(str(self.start_time),'%Y-%m-%d %H:%M:%S')
+        if type(self.end_time) != datetime.datetime:
+            self.end_time = datetime.datetime.strptime(str(self.end_time),'%Y-%m-%d %H:%M:%S')
+        
         exists = self.__class__.objects.filter(
             (Q(start_time__lte=self.start_time) & Q(end_time__gt=self.start_time)) | 
             (Q(start_time__gte=self.start_time) & Q(start_time__lt=self.end_time))).exclude(pk=self.pk).exists()
