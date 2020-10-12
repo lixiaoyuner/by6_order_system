@@ -29,7 +29,7 @@ class PayAdmin(admin.ModelAdmin):
     list_display = ( 'time', 'money', 'appointment', 'charge', 'type', 'remarks')
     search_fields =  ['time']
     list_filter = ['type']
-    ordering = ('time',)
+    ordering = ('-time',)
 
 admin.site.register(Pay, PayAdmin)
 

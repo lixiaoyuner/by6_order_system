@@ -15,4 +15,5 @@ urlpatterns = [
     path('pay/deduct/', views.deduct, name='deduct'),
     path('set_overtime/', views.set_overtime, name='set_overtime'),
     path('group/', views.show_group, name='group'),
+    path('pay/contract_deduct/', views.contract_deduct, name='contract_deduct')
 ]

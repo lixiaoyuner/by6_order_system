@@ -60,7 +60,7 @@ def my_charge_record(request):
         rest_money = sum([charge.rest_money for charge in charges if charge.rest_money > 0])
         return render(request, 'my_charge_record.html', {'charges': charges, 'rest_money': rest_money})
     elif request.method == 'POST':
-        res, string = {}, ''
+        res, string, total = {}, '', 0
         id = int(request.POST.get('id'))
         charge = Charge.objects.get(id=id)
         pays = Pay.objects.filter(charge=charge)
@@ -73,7 +73,10 @@ def my_charge_record(request):
             start_time = localtime(appointment.start_time).strftime('%Y-%m-%d %H:%M:%S')
             end_time = localtime(appointment.end_time).strftime('%H:%M:%S')
             string += f'<div>{start_time}--{end_time}  花费{appointment.money}元</div>'
+            total += appointment.money
 
+        rest_money = charge.money - total
+        string += f'<div>当前花费{total}元，剩余{rest_money}，余额{charge.rest_money}</div>'
         res['data'] = string
 
         return JsonResponse(res)
@@ -110,6 +113,48 @@ def deduct(request):
             res['ok'], res['msg'] = False, '数据库写入失败'
 
         return JsonResponse(res)
+
+@login_required
+def contract_deduct(request):
+    if request.method == 'GET':
+        contracts = Charge.objects.all()
+        return render(request, 'correct_contract.html', {'contracts':contracts})
+    elif request.method == 'POST':
+        res = {}
+        contract_id = int(request.POST.get('contract_id'))
+        money = request.POST.get('money')
+        remark = request.POST.get('remark')
+        try:
+            money = int(money)
+            contract = Charge.objects.get(id=contract_id)
+            contract.rest_money += money
+            contract.save()
+            t = PayType.objects.get(id=5)
+            Pay.objects.create(money=money, charge=contract, type=t, remarks=remark)
+            res['ok'], res['msg'] = True, '成功'
+        except Exception as error:
+            res['ok'], res['msg'] = False, '失败'        
+        
+        return JsonResponse(res)
+        # res = {}
+        # user_id = request.POST.get('user_id')
+        # start_time = request.POST.get('start_time')
+        # end_time = request.POST.get('end_time')
+        # remark = request.POST.get('remark')
+        # start_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M')
+        # end_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M')
+        # if start_time > end_time:
+        #     res['ok'], res['msg'] = False, '时间选择有误'
+        #     return JsonResponse(res)
+        # try:
+        #     Appointment.objects.create(user_id=user_id, start_time=start_time, end_time=end_time, remarks=remark, last_edit_time=datetime.now(), status=1)
+            
+        #     res['ok'], res['msg'] = True, '补时成功'
+        # except Exception as error:
+        #     print(str(error))
+        #     res['ok'], res['msg'] = False, '数据库写入失败'
+
+        # return JsonResponse(res)
 
 @login_required
 def set_overtime(request):

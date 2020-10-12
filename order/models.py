@@ -30,7 +30,7 @@ class Charge(models.Model):
     remarks = models.TextField('备注',default='', null=True, blank=True)
 
     def __str__(self):
-        return f'序号{self.id} | 时间{self.time} | 金额{self.money}'
+        return f'序号{self.id}-{self.group} | 时间{self.time} | 金额{self.money}'
     
     @property
     def charge_type(self):
