@@ -6,6 +6,13 @@ class ChargeTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'value')
     ordering = ('name',)
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+    def get_actions(self, request):
+        return []
+
 admin.site.register(Chargetype, ChargeTypeAdmin)
 
 class ChargeAdmin(admin.ModelAdmin):
@@ -30,6 +37,13 @@ class PayTypeAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
     list_display = ('id', 'name', 'value')
     ordering = ('name',)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+    def get_actions(self, request):
+        return []
 
 admin.site.register(PayType, PayTypeAdmin)
 
