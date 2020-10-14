@@ -8,4 +8,12 @@ class MailAdmin(admin.ModelAdmin):
     search_fields = ['creator', 'sender', 'receiver', 'subject', 'content', 'attach', 'mail_type', 'desc', 'add_time']
     ordering = ('-add_time',)
 
+    def has_add_permission(self, request):
+        return False
+    def has_delete_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+    def get_actions(self, request):
+        return []
 admin.site.register(Mail,MailAdmin)

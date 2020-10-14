@@ -7,6 +7,15 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_filter = ['user', 'status', 'draft', 'is_break']
     search_fields =  ['user', 'status', 'remarks']
     ordering = ('-start_time',)
+
+    def has_add_permission(self, request):
+        return False
+    def has_delete_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+    def get_actions(self, request):
+        return []
    
     def get_readonly_fields(self, request,obj=None):
         return ['id']     
