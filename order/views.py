@@ -65,6 +65,7 @@ def my_charge_record(request):
         charge = Charge.objects.get(id=id)
         pays = Pay.objects.filter(charge=charge)
         appointment_ids = set([pay.appointment.id for pay in pays if pay.appointment])
+        deduct_pays = [pay for pay in pays if not pay.appointment]
         appointments = []
         for appointment_id in appointment_ids:
             appointments.append(Appointment.objects.get(id=appointment_id))
@@ -74,6 +75,9 @@ def my_charge_record(request):
             end_time = localtime(appointment.end_time).strftime('%H:%M:%S')
             string += f'<div>{start_time}--{end_time}  花费{appointment.money}元</div>'
             total += appointment.money
+
+        for pay in deduct_pays:
+            string += f'<div>调整{pay.money}元（正数为增加，负数为减少），原因：{pay.remarks}</div>'
 
         rest_money = charge.money - total
         string += f'<div>当前花费{total}元，剩余{rest_money}，余额{charge.rest_money}</div>'

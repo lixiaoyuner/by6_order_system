@@ -72,7 +72,10 @@ def  _alterable(user, appointment, force=False):
     now = datetime.utcnow()
     # 历史数据不能修改
     if start_time < now:
-       return False, '历史数据不能修改! '
+        if user.is_staff and (now - start_time).total_seconds() < 3600 * 24:
+            return True, ''
+        else:
+            return False, '历史数据不能修改! '
 
     remedial_miniutes = 3      # 上次修改后，这个分钟内可以补救修改
     if last_edit_time > now:
@@ -83,7 +86,7 @@ def  _alterable(user, appointment, force=False):
         return True, ''
 
     pre_hours         = 48     # 修改记录至少提前48小时
-    if (start_time - now).total_seconds() < 3600 * pre_hours:
+    if (start_time - now).total_seconds() < 3600 * pre_hours and not user.is_staff:
         return False, '请至少提前%d小时进行该操作！' % (pre_hours, )
 
     return True, ''
@@ -366,14 +369,20 @@ def get_appointments(request):
 @login_required
 def stats(request):
     '''总预约统计视图函数'''
-    if not request.user.is_staff:
+    if not request.user.is_staff and not request.user.username[:3] == 'mri':
         return HttpResponseRedirect('/')
-
+    users = User.objects.all()
     start_time, end_time = get_start_end_time(request)
-    objs = Appointment.objects.filter(start_time__gte = start_time, start_time__lte = end_time).all()
+    user_id = request.GET.get('user_select')
+    if user_id:
+        objs = Appointment.objects.filter(start_time__gte = start_time, start_time__lte = end_time, user_id = int(user_id)).all()
+    else:
+        objs = Appointment.objects.filter(start_time__gte = start_time, start_time__lte = end_time).all()
     dicts = stats_data(objs)
     dicts['start_time'] = start_time
     dicts['end_time'] = end_time
+    dicts['users'] = users
+    dicts['user_id'] = int(user_id) if user_id else user_id
     return render(request, 'stats_all.html', dicts)
 
 
@@ -403,7 +412,11 @@ def my_appointment(request):
 @login_required
 def export(request):
     start_time, end_time = get_start_end_time(request)
-    appointments = Appointment.objects.filter(start_time__gte=start_time, start_time__lte=end_time, draft=False)
+    user_id = request.GET.get('user_id')
+    if user_id:
+        appointments = Appointment.objects.filter(start_time__gte=start_time, start_time__lte=end_time, user_id = int(user_id), draft=False)
+    else:
+        appointments = Appointment.objects.filter(start_time__gte=start_time, start_time__lte=end_time, draft=False)
     chargetypes = Chargetype.objects.all()
     paytype = PayType.objects.get(id=1)
     res = {chargetype.name: [0, chargetype.value] for chargetype in chargetypes}

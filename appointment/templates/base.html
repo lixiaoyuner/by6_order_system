@@ -32,7 +32,15 @@
                 <li><a href="{% url 'my-appointment' %}">我的预约记录</a></li>
                 <li><a href="{% url 'my-charge' %}">我的充值记录</a></li>
                 <li><a href="{% url 'newslist' %}">新闻公告</a></li>
-                {% if request.user.is_superuser %}
+                {% if request.user.username == 'mr1' or request.user.username == 'mr2' %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员操作 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'stats' %}">统计</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                {% if request.user.is_staff %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员操作 <span class="caret"></span></a>
                         <ul class="dropdown-menu">

@@ -45,6 +45,6 @@ $(document).ready(function(){
 
     $('#export').click(function(){
         event.preventDefault();
-        location.href='/export/?start_time=' + $('#start_time').val() + '&end_time=' + $('#end_time').val()
+        location.href='/export/?start_time=' + $('#start_time').val() + '&end_time=' + $('#end_time').val() + '&user_id=' + $('#user_select').val();
     })
 })
