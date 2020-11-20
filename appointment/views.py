@@ -369,7 +369,7 @@ def get_appointments(request):
 @login_required
 def stats(request):
     '''总预约统计视图函数'''
-    if not request.user.is_staff and not request.user.username[:3] == 'mri':
+    if not request.user.is_staff and not request.user.username[:2] == 'mr':
         return HttpResponseRedirect('/')
     users = User.objects.all()
     start_time, end_time = get_start_end_time(request)
