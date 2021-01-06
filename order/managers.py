@@ -5,6 +5,9 @@ from .models import Pay, Charge, PayType, Overtime
 from django.utils.timezone import localtime
 from django.contrib.auth.models import Group
 
+import datetime
+import pytz
+
 class OrderError(Exception):
     '''
     网络错误类型定义
@@ -58,7 +61,7 @@ class OrderManager():
                 raise IndexError
             price = charge.type.value // 12
             # print((start_time - end_time).seconds, '------')
-            times = (end_time - start_time).seconds // 60 // 5
+            times = (end_time - start_time).total_seconds() // 60 // 5
             pay_money = price * times
             charge.rest_money -= pay_money
             self.create_pay(money=pay_money, appointment=appointment, charge=charge, type=PayType.objects.get(id=4))
@@ -80,7 +83,7 @@ class OrderManager():
             raise OrderError(msg='创建支付订单失败')
         return
 
-    def is_overtime(self, start_time, end_time):
+    def compute_money(self, start_time, end_time):
         on_time = [*map(int, Parameter.objects.get(id=1).value.split(':'))]
         on_time = on_time[0] * 60 + on_time[1]
         out_time = [*map(int, Parameter.objects.get(id=2).value.split(':'))]
@@ -91,9 +94,12 @@ class OrderManager():
         end_noon = end_noon[0] * 60 + end_noon[1]
         on_price = int(Parameter.objects.get(id=3).value) / 60
 
-        start_minute = localtime(start_time).hour * 60 + localtime(start_time).minute
-        end_minute = localtime(end_time).hour * 60 + localtime(end_time).minute
+        # start_minute = localtime(start_time).hour * 60 + localtime(start_time).minute
+        # end_minute = localtime(end_time).hour * 60 + localtime(end_time).minute
 
+        start_minute = start_time.hour * 60 + start_time.minute
+        end_minute = end_time.hour * 60 + end_time.minute
+        #print(start_minute, end_minute, on_time, out_time, start_noon, end_noon)
         minutes = 0
 
         if start_minute < on_time:
@@ -144,9 +150,27 @@ class OrderManager():
             minutes = (end_time-start_time).seconds // 60
         # else:
         #     minutes = mor_minutes + aft_minute
-        money = on_price * minutes
-        
+        money = on_price * (minutes + 1)
+        #print(round(money), "---------", on_price, minutes, start_time, end_time)
         return round(money)
 
+    def is_overtime(self, start_time, end_time):
+        tz = pytz.timezone('Asia/Shanghai')
+        # print(start_time.tzinfo)
+        start_time, end_time = localtime(start_time), localtime(end_time)
+        # print(start_time, end_time)
+        # print(localtime(start_time), localtime(end_time))
+        end_tmp = tz.localize(datetime.datetime(start_time.year, start_time.month, start_time.day+1))
+        # print(end_tmp, end_time)
+        #print(end_tmp > end_time, end_tmp, end_time, end_tmp - end_time, (end_tmp - end_time).total_seconds())
+        if end_tmp >= end_time:
+            return self.compute_money(start_time, end_time - datetime.timedelta(seconds=1))
+        total_money = 0
+        while end_tmp < end_time:
+            total_money += self.compute_money(start_time, end_tmp - datetime.timedelta(seconds=1))
+            start_time = end_tmp
+            end_tmp = tz.localize(datetime.datetime(start_time.year, start_time.month, start_time.day+1))
+        total_money += self.compute_money(start_time, end_time - datetime.timedelta(seconds=1))
+        return total_money
 
         
