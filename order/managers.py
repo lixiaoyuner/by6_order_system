@@ -150,7 +150,7 @@ class OrderManager():
             minutes = (end_time-start_time).seconds // 60
         # else:
         #     minutes = mor_minutes + aft_minute
-        money = on_price * (minutes + 1)
+        money = on_price * (minutes + 1) if minutes else 0
         #print(round(money), "---------", on_price, minutes, start_time, end_time)
         return round(money)
 
