@@ -7,4 +7,5 @@
 *.log
 *_settings.py
 04_sendmail_test.py
-
+*.pid
+*.swp
