@@ -160,7 +160,8 @@ class OrderManager():
         start_time, end_time = localtime(start_time), localtime(end_time)
         # print(start_time, end_time)
         # print(localtime(start_time), localtime(end_time))
-        end_tmp = tz.localize(datetime.datetime(start_time.year, start_time.month, start_time.day+1))
+        end_tmp = tz.localize(datetime.datetime(start_time.year, start_time.month, start_time.day))
+        end_tmp += datetime.timedelta(1)
         # print(end_tmp, end_time)
         #print(end_tmp > end_time, end_tmp, end_time, end_tmp - end_time, (end_tmp - end_time).total_seconds())
         if end_tmp >= end_time:
