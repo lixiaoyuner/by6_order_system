@@ -170,7 +170,8 @@ class OrderManager():
         while end_tmp < end_time:
             total_money += self.compute_money(start_time, end_tmp - datetime.timedelta(seconds=1))
             start_time = end_tmp
-            end_tmp = tz.localize(datetime.datetime(start_time.year, start_time.month, start_time.day+1))
+            end_tmp = tz.localize(datetime.datetime(start_time.year, start_time.month, start_time.day))
+            end_tmp += datetime.timedelta(1)
         total_money += self.compute_money(start_time, end_time - datetime.timedelta(seconds=1))
         return total_money
 
